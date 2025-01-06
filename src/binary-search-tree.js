@@ -89,6 +89,24 @@ class BinarySearchTree {
       if (currentNode.left === null || currentNode.right === null) {
         this.rootNode = currentNode.left || currentNode.right;
       }
+      if (currentNode.left && currentNode.right) {
+        // ищем новый рут
+        let min = currentNode.right;
+        let parentNode = currentNode;
+        while (min.left) {
+          parentNode = min;
+          min = min.left;
+        }
+        // мин это листик
+        if (min.left === null && min.right === null) {
+          this.rootNode = min;
+          this.rootNode.left = currentNode.left;
+          this.rootNode.right = currentNode.right;
+          // console.log(this.p)
+          parentNode.left = null;
+          // this.parentNode.left = null;
+        }
+      }
     }
 
     while (currentNode && currentNode.data !== data) {
@@ -100,7 +118,7 @@ class BinarySearchTree {
       }
 
       // удаляю листик, проверяю существует или нет (слева мб 0)
-      if (currentNode.left === null && !currentNode.right) {
+      if (!currentNode.left && !currentNode.right) {
         currentNode === parentNode.left
           ? (parentNode.left = null)
           : (parentNode.right = null);
