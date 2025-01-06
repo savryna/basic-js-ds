@@ -76,18 +76,44 @@ class BinarySearchTree {
   }
 
   remove(data) {
-    if (!this.rootNode.has(data)) {
-      return;
-    }
     let currentNode = this.rootNode;
-    while (currentNode) {
-      // удаляю листик
+    let parentNode = this.rootNode;
+
+    // рут
+    if (data === currentNode.data) {
+      // рут без потомков
+      if (currentNode.left === null && currentNode.right === null) {
+        this.root = null;
+      }
+      // рут с одним потомком
+      if (currentNode.left === null || currentNode.right === null) {
+        this.rootNode = currentNode.left || currentNode.right;
+      }
+    }
+
+    while (currentNode && currentNode.data !== data) {
+      parentNode = currentNode;
+      if (data < parentNode.data) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+
+      // удаляю листик, проверяю существует или нет (слева мб 0)
+      if (currentNode.left === null && !currentNode.right) {
+        currentNode === parentNode.left
+          ? (parentNode.left = null)
+          : (parentNode.right = null);
+      }
+
+      // узел только с одним листочком и не рут
       if (
-        currentNode === data &&
-        currentNode.left === null &&
-        currentNode.right === null
+        (currentNode.left && !currentNode.right) ||
+        (currentNode.left === null && currentNode.right)
       ) {
-        currentNode = new Node(null);
+        currentNode === parentNode.left
+          ? (parentNode.left = currentNode.left || currentNode.right)
+          : (parentNode.right = currentNode.left || currentNode.right);
       }
     }
   }
